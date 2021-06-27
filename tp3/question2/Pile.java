@@ -15,8 +15,11 @@ public class Pile implements PileI {
     private int ptr;
 
     public Pile(int taille) {
-        // traiter le cas <=0
-        // a completer
+        if(taille<=0){
+            taille=CAPACITE_PAR_DEFAUT;
+        }
+        this.zone = new Object[taille];
+        this.ptr = 0;
     }
 
     public Pile() {
@@ -24,41 +27,72 @@ public class Pile implements PileI {
     }
 
     public void empiler(Object o) throws PilePleineException {
-        // a completer
+        if (estPleine())
+            throw new PilePleineException();
+        this.zone[this.ptr] = o;
+        this.ptr++;
     }
 
     public Object depiler() throws PileVideException {
-        // a completer
-        return null;
+        if (estVide())
+            throw new PileVideException();
+        this.ptr--;
+        return zone[ptr];
     }
 
     public Object sommet() throws PileVideException {
-        // a completer
-        return null;
+        return depiler();
     }
 
     public int capacite() {
-        // a completer
-        return -1;
+        return zone.length;
     }
 
     public int taille() {
-        // a completer
-        return -1;
+        System.out.print(ptr);
+        return ptr;
     }
 
     public boolean estVide() {
-        // a completer
-        return false;
+        return ptr == 0;
     }
 
     public boolean estPleine() {
-        // a completer
-        return false;
+        return ptr == zone.length;
     }
 
     public boolean equals(Object o) {
-        // a completer
+        int i=0;
+        Pile p=(Pile) o;
+        if(taille()==p.taille())
+        {
+            if(capacite()==p.capacite())
+            {
+                 while (estVide() == false)
+                    {
+                        try{
+                        if (sommet() == p.sommet())
+                        {
+                            try{
+                            depiler();
+                            p.depiler();
+                            }catch(PileVideException e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                        }catch(PileVideException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                return true;
+            }
+        }
         return false;
     }
 
@@ -68,7 +102,13 @@ public class Pile implements PileI {
     }
 
     public String toString() {
-        // a completer
-        return null;
+        StringBuffer sb = new StringBuffer("[");
+        for (int i = ptr - 1; i >= 0; i--) {
+            sb.append(zone[i].toString());
+            if (i > 0)
+                sb.append(", ");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 }
